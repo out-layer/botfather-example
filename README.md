@@ -1,5 +1,7 @@
 # Bot Father
 
+> **[Full documentation](https://outlayer.fastnear.com/docs/examples#botfather-ark)** on the OutLayer dashboard.
+
 WASI module for managing multiple NEAR accounts with AI-generated names.
 
 ## Features
