@@ -23,7 +23,10 @@ Output: `target/wasm/bot-father.wasm`
 
 Required:
 - `OPENAI_API_KEY` - OpenAI API key for name generation
-- `BOT_FATHER_MASTER_KEY` - Master seed for key derivation (generates deterministic child keys, NOT used for blockchain transactions)
+- `PROTECTED_MASTER_KEY` - Master seed for key derivation (generates deterministic child keys, NOT used
+  for blockchain transactions). The `PROTECTED_` prefix is reserved for secrets the keystore
+  generates inside the TEE: it refuses to store one supplied by hand, and it will not regenerate
+  one that already exists. Locally, pass it with `--env`.
 - `NEAR_SENDER_ID` - User's account ID (pays for account creation and transfers)
 - `NEAR_SENDER_PRIVATE_KEY` - **SECRET** Private key for NEAR_SENDER_ID account (ed25519:... format, provided by user who runs WASM, used to sign all blockchain transactions)
 
@@ -178,7 +181,7 @@ This enables **stateless operation** - no need to store account list between run
   --wasm target/wasm32-wasip2/release/bot-father.wasm \
   --input '{"action":"create_accounts","prompt":"space theme","count":3,"deposit_per_account":"1000000000000000000000000"}' \
   --env OPENAI_API_KEY=sk-... \
-  --env BOT_FATHER_MASTER_KEY=ed25519:... \
+  --env PROTECTED_MASTER_KEY=ed25519:... \
   --env NEAR_SENDER_ID=alice.testnet \
   --env NEAR_SENDER_PRIVATE_KEY=ed25519:... \
   --rpc --rpc-allow-transactions \
@@ -188,7 +191,7 @@ This enables **stateless operation** - no need to store account list between run
 ../wasi-test-runner/target/release/wasi-test \
   --wasm target/wasm32-wasip2/release/bot-father.wasm \
   --input '{"action":"fund_accounts","total_amount":"30000000000000000000000000"}' \
-  --env BOT_FATHER_MASTER_KEY=ed25519:... \
+  --env PROTECTED_MASTER_KEY=ed25519:... \
   --env NEAR_SENDER_ID=alice.testnet \
   --env NEAR_SENDER_PRIVATE_KEY=ed25519:... \
   --rpc-allow-transactions \
@@ -198,7 +201,7 @@ This enables **stateless operation** - no need to store account list between run
 ../wasi-test-runner/target/release/wasi-test \
   --wasm target/wasm32-wasip2/release/bot-father.wasm \
   --input '{"action":"fund_accounts","total_amount":"20000000000000000000000000","indices":[0,2]}' \
-  --env BOT_FATHER_MASTER_KEY=ed25519:... \
+  --env PROTECTED_MASTER_KEY=ed25519:... \
   --env NEAR_SENDER_ID=alice.testnet \
   --env NEAR_SENDER_PRIVATE_KEY=ed25519:... \
   --rpc-allow-transactions \
@@ -208,7 +211,7 @@ This enables **stateless operation** - no need to store account list between run
 ../wasi-test-runner/target/release/wasi-test \
   --wasm target/wasm32-wasip2/release/bot-father.wasm \
   --input '{"action":"list_accounts"}' \
-  --env BOT_FATHER_MASTER_KEY=ed25519:... \
+  --env PROTECTED_MASTER_KEY=ed25519:... \
   --env NEAR_SENDER_ID=alice.testnet \
   --rpc \
   --max-instructions 50000000000
@@ -217,7 +220,7 @@ This enables **stateless operation** - no need to store account list between run
 ../wasi-test-runner/target/release/wasi-test \
   --wasm target/wasm32-wasip2/release/bot-father.wasm \
   --input '{"action":"batch_call","contract_id":"v2.ref-finance.near","method_name":"deposit","args":{},"deposit":"1","gas":"30000000000000","indices":[]}' \
-  --env BOT_FATHER_MASTER_KEY=ed25519:... \
+  --env PROTECTED_MASTER_KEY=ed25519:... \
   --env NEAR_SENDER_ID=alice.testnet \
   --env NEAR_SENDER_PRIVATE_KEY=ed25519:... \
   --rpc-allow-transactions \
@@ -248,3 +251,7 @@ User Input
     ▼
  JSON Output
 ```
+
+## License
+
+MIT OR Apache-2.0, at your option — see `LICENSE-MIT` and `LICENSE-APACHE`.
